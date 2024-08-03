@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groups</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* Navbar styling */
+        .navbar {
+            background: linear-gradient(90deg, #007BFF, #0056b3);
+            overflow: hidden;
+            border-bottom: 2px solid #0056b3;
+        }
+        .navbar a {
+            float: left;
+            display: block;
+            color: #fff;
+            text-align: center;
+            padding: 16px 20px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .navbar a:hover {
+            background-color: #0056b3;
+            color: #e0e0e0;
+        }
+        .navbar a.active {
+            background-color: #0056b3;
+            color: #e0e0e0;
+        }
+        .container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        li:hover {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('user_profile', user_id=session['user_id']) }}">Profile</a>
+
+        <a href="{{ url_for('search_users') }}">Search Users</a>
+        <a href="{{ url_for('groups') }}" class="active">Groups</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>Groups</h1>
+
+        <form action="{{ url_for('create_group') }}" method="post">
+            <input type="text" name="group_name" placeholder="Enter group name" required>
+            <button type="submit">Create Group</button>
+        </form>
+
+        <h2>Group List</h2>
+        <ul>
+            {% for group in groups %}
+                <li>{{ group[1] }} (Created by user ID: {{ group[2] }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

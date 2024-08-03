@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsfeed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #3498db;
+            padding: 10px;
+            color: white;
+            display: flex;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: center;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            margin-right: 20px; /* Add space between links */
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px;
+            background-color: #3498db;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .post {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #fff;
+        }
+        .post img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .post h3 {
+            margin-top: 0;
+        }
+        .post p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('user_profile', user_id=session.user_id) }}">Profile</a>
+        <a href="{{ url_for('search_users') }}">Search Users</a>
+        <a href="{{ url_for('groups') }}">Groups</a>
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>Newsfeed</h1>
+        <form action="{{ url_for('post') }}" method="post" enctype="multipart/form-data">
+            <textarea name="content" placeholder="What's on your mind?" required></textarea>
+            <input type="file" name="image">
+            <button type="submit">Post</button>
+        </form>
+
+        <h2>Posts</h2>
+        {% for post in posts %}
+            <div class="post">
+                <h3>{{ post[1] }} {{ post[2] }}</h3>
+                <p>{{ post[3] }}</p>
+                {% if post[4] %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ post[4]) }}" alt="Post Image">
+                {% endif %}
+                <p>Likes: {{ post[5] }} | Comments: {{ post[6] }}</p>
+                <form action="{{ url_for('like', post_id=post[0]) }}" method="post">
+                    <button type="submit">Like</button>
+                </form>
+                <a href="{{ url_for('comments', post_id=post[0]) }}">View Comments</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

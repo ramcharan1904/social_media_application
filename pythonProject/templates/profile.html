@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #4d92ef;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .profile-info {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+        }
+        .profile-image {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-right: 20px;
+        }
+        .profile-header h2 {
+            margin: 0;
+        }
+        .profile-header p {
+            margin: 5px 0 0;
+        }
+        form {
+            margin-top: 20px;
+        }
+        form textarea, form input[type="file"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        form button {
+            padding: 10px;
+            background-color: #4d92ef;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #3b79c9;
+        }
+        .user-posts {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .user-posts h2 {
+            margin-top: 0;
+        }
+        .post {
+            margin-bottom: 20px;
+        }
+        .post-image {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .post-actions a {
+            color: #4d92ef;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .post-actions a:hover {
+            text-decoration: underline;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #4d92ef;
+            color: #fff;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Profile</h1>
+        <nav>
+            <a href="{{ url_for('newsfeed') }}">Home</a>
+            <a href="{{ url_for('user_profile', user_id=session['user_id']) }}">My Profile</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </nav>
+    </header>
+    
+    <section class="profile-info">
+        <div class="profile-header">
+            {% if user[6] %}
+                <img src="{{ url_for('static', filename='uploads/' ~ user[6]) }}" alt="Profile Picture" class="profile-image">
+            {% else %}
+                <img src="{{ url_for('static', filename='default-profile.png') }}" alt="Default Profile Picture" class="profile-image">
+            {% endif %}
+            <div>
+                <h2>{{ user[1] }} {{ user[2] }}</h2>
+                <p>{{ user[5] }}</p> <!-- Bio -->
+                <form action="{{ url_for('update_profile') }}" method="post" enctype="multipart/form-data">
+                    <label for="bio">Update Bio:</label>
+                    <textarea id="bio" name="bio" rows="4">{{ user[5] }}</textarea>
+                    <br>
+                    <label for="profile_image">Update Profile Image:</label>
+                    <input type="file" id="profile_image" name="profile_image">
+                    <br>
+                    <button type="submit">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <section class="user-posts">
+        <h2>My Posts</h2>
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post">
+                    {% if post[3] %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ post[3]) }}" alt="Post Image" class="post-image">
+                    {% endif %}
+                    <p>{{ post[2] }}</p>
+                    <small>Posted on: {{ post[4] }}</small>
+                    <div class="post-actions">
+                        <a href="{{ url_for('comments', post_id=post[0]) }}">View Comments</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No posts yet!</p>
+        {% endif %}
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Your Social Media App</p>
+    </footer>
+</body>
+</html>
